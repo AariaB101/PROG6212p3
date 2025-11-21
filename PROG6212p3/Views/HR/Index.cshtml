@@ -1,0 +1,43 @@
+﻿@model IEnumerable<PROG6212p3.Models.Lecturer>
+
+@{
+    ViewBag.Title = "HR Dashboard - Lecturers";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>HR Dashboard - Lecturers</h2>
+
+@if (TempData["Success"] != null)
+{
+    <div style="color:green; font-weight:bold;">@TempData["Success"]</div>
+}
+
+<div style="margin-bottom: 15px;">
+    <a class="btn-modern" href="@Url.Action("AddLecturer", "HR")">Add Lecturer</a>
+</div>
+
+<table class="dashboard-table">
+    <thead>
+        <tr>
+            <th>Lecturer ID</th>
+            <th>Full Name</th>
+            <th>Email</th>
+            <th>Password</th>
+            <th>Hourly Rate</th>
+            <th>Number of Claims</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var lecturer in Model)
+        {
+            <tr>
+                <td>@lecturer.LecturerId</td>
+                <td>@lecturer.FullName</td>
+                <td>@lecturer.Email</td>
+                <td>@lecturer.Password</td>
+                <td>@lecturer.HourlyRate.ToString("F2")</td>
+                <td>@(lecturer.Claim?.Count() ?? 0)</td>
+            </tr>
+        }
+    </tbody>
+</table>

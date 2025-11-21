@@ -1,0 +1,56 @@
+﻿@model IEnumerable<PROG6212p3.Models.Claim>
+
+@{
+    ViewBag.Title = "Coordinator Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Programme Coordinator Dashboard</h2>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Claim ID</th>
+            <th>Lecturer</th>
+            <th>Hours Worked</th>
+            <th>Hourly Rate</th>
+            <th>Total</th>
+            <th>Status</th>
+            <th>Submitted On</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var claim in Model)
+        {
+            <tr>
+                <td>@claim.ClaimId</td>
+                <td>@claim.LecturerName</td>
+                <td>@claim.HoursWorked</td>
+                <td>@claim.HourlyRate.ToString("F2")</td>
+                <td>@claim.Total.ToString("F2")</td>
+                <td>@claim.Status</td>
+                <td>@claim.SubmittedOn</td>
+                <td>
+                    @if (claim.Status == ClaimStatus.Pending)
+                    {
+                        <form method="post" action="@Url.Action("Approve", "CoordinatorPage")" style="display:inline;">
+                            <input type="hidden" name="claimId" value="@claim.ClaimId" />
+                            <button type="submit" class="btn btn-success btn-sm">Approve</button>
+                        </form>
+                        <form method="post" action="@Url.Action("Reject", "CoordinatorPage")" style="display:inline;">
+                            <input type="hidden" name="claimId" value="@claim.ClaimId" />
+                            <button type="submit" class="btn btn-danger btn-sm">Reject</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <span class="text-muted">No actions available</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a href="@Url.Action("Index", "Home")" class="btn btn-secondary">Back</a>

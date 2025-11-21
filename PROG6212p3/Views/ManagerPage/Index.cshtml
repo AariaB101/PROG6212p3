@@ -1,0 +1,165 @@
+﻿@model IEnumerable<PROG6212p3.Models.Claim>
+
+@{
+    ViewBag.Title = "Manager Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .dashboard-title {
+        font-size: 26px;
+        font-weight: bold;
+        color: #333;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .futuristic-button {
+        background: black;
+        color: white;
+        font-size: 14px;
+        font-weight: 600;
+        padding: 10px 15px;
+        margin: 5px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+        transition: all 0.3s ease;
+    }
+
+        .futuristic-button:hover {
+            background-color: #4400FF;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.6);
+        }
+
+    .modern-button {
+        background-color: #2D89EF;
+        color: white;
+        font-weight: 600;
+        padding: 8px 16px;
+        margin: 5px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+        .modern-button:hover {
+            background-color: #1E5FAB;
+        }
+
+    .status-approvedpc {
+        background-color: #FFA500;
+        color: white;
+        font-weight: bold;
+        padding: 6px;
+        border-radius: 4px;
+    }
+
+    .status-approvedam {
+        background-color: #28a745;
+        color: white;
+        font-weight: bold;
+        padding: 6px;
+        border-radius: 4px;
+    }
+
+    .status-rejected {
+        background-color: #dc3545;
+        color: white;
+        font-weight: bold;
+        padding: 6px;
+        border-radius: 4px;
+    }
+
+    .status-pending {
+        background-color: #6c757d;
+        color: white;
+        font-weight: bold;
+        padding: 6px;
+        border-radius: 4px;
+    }
+
+    .dashboard-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+        background: white;
+    }
+
+        .dashboard-table th, .dashboard-table td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+        }
+
+    .alt-row:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+</style>
+
+<div class="dashboard-title">Manager Dashboard</div>
+
+<div style="text-align:right; margin-bottom:10px;">
+    <button class="futuristic-button" onclick="window.location.href='@Url.Action("Index", "Home")'">Back</button>
+</div>
+
+<table class="dashboard-table">
+    <thead>
+        <tr>
+            <th>Claim ID</th>
+            <th>Lecturer</th>
+            <th>Hours Worked</th>
+            <th>Hourly Rate</th>
+            <th>Total</th>
+            <th>Status</th>
+            <th>Submitted On</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var claim in Model)
+        {
+            <tr class="alt-row">
+                <td>@claim.ClaimId</td>
+                <td>@claim.LecturerName</td>
+                <td>@claim.HoursWorked</td>
+                <td>@claim.HourlyRate.ToString("F2")</td>
+                <td>@claim.Total.ToString("F2")</td>
+                <td>
+                    @if (claim.Status == ClaimStatus.ApprovedByPC)
+                    {
+                        <div class="status-approvedpc">Approved by PC</div>
+                    }
+                    else if (claim.Status == ClaimStatus.ApprovedByAM)
+                    {
+                        <div class="status-approvedam">Approved by AM</div>
+                    }
+                    else if (claim.Status == ClaimStatus.Rejected)
+                    {
+                        <div class="status-rejected">Rejected</div>
+                    }
+                    else
+                    {
+                        <div class="status-pending">Pending</div>
+                    }
+                </td>
+                <td>@claim.SubmittedOn</td>
+                <td>
+                    @if (claim.Status == ClaimStatus.ApprovedByPC)
+                    {
+                        <form method="post" action="@Url.Action("Approve", "ManagerPage")" style="display:inline;">
+                            <input type="hidden" name="claimId" value="@claim.ClaimId" />
+                            <button type="submit" class="modern-button">Approve</button>
+                        </form>
+                        <form method="post" action="@Url.Action("Reject", "ManagerPage")" style="display:inline;">
+                            <input type="hidden" name="claimId" value="@claim.ClaimId" />
+                            <button type="submit" class="modern-button">Reject</button>
+                        </form>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

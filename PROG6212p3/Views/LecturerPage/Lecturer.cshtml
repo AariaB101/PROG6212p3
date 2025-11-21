@@ -1,0 +1,122 @@
+﻿@model IEnumerable<PROG6212p3.Models.Claim>
+
+@{
+    ViewBag.Title = "Lecturer Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .dashboard-title {
+        font-size: 26px;
+        font-weight: bold;
+        color: #333;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .modern-button {
+        background-color: #2D89EF;
+        color: white;
+        font-weight: 600;
+        padding: 8px 16px;
+        margin: 5px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        width: 140px;
+        transition: background-color 0.3s ease;
+    }
+
+        .modern-button:hover {
+            background-color: #1E5FAB;
+        }
+
+    .status-submitted {
+        background-color: #1E5FAB;
+        color: white;
+        font-weight: bold;
+        padding: 6px;
+        text-align: center;
+        border-radius: 4px;
+    }
+
+    .status-approved {
+        background-color: #28a745;
+        color: white;
+        font-weight: bold;
+        padding: 6px;
+        text-align: center;
+        border-radius: 4px;
+    }
+
+    .status-rejected {
+        background-color: #dc3545;
+        color: white;
+        font-weight: bold;
+        padding: 6px;
+        text-align: center;
+        border-radius: 4px;
+    }
+
+    .dashboard-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+        background: white;
+    }
+
+        .dashboard-table th, .dashboard-table td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+        }
+
+    .alt-row:nth-child(even) {
+        background-color: #f0f0f0;
+    }
+</style>
+
+<div class="dashboard-title">Lecturer Dashboard</div>
+
+<div style="text-align:right; margin-bottom:10px;">
+    <a class="modern-button" href="@Url.Action("Claims", "LecturerPage")">Submit New Claim</a>
+</div>
+
+<table class="dashboard-table">
+    <thead>
+        <tr>
+            <th>Claim ID</th>
+            <th>Hours Worked</th>
+            <th>Hourly Rate</th>
+            <th>Total</th>
+            <th>Status</th>
+            <th>Submitted On</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var claim in Model)
+        {
+            <tr class="alt-row">
+                <td>@claim.ClaimId</td>
+                <td>@claim.HoursWorked</td>
+                <td>@claim.HourlyRate.ToString("F2")</td>
+                <td>@claim.Total.ToString("F2")</td>
+                <td>
+                    @if (claim.Status == PROG6212p3.Models.ClaimStatus.Rejected)
+                    {
+                        <div class="status-rejected">Rejected</div>
+                    }
+                    else if (claim.Status == PROG6212p3.Models.ClaimStatus.ApprovedByAM || claim.Status == PROG6212p3.Models.ClaimStatus.ApprovedByPC)
+                    {
+                        <div class="status-approved">Approved</div>
+                    }
+                    else
+                    {
+                        <div class="status-submitted">Pending</div>
+                    }
+                </td>
+                <td>@claim.SubmittedOn</td>
+            </tr>
+        }
+    </tbody>
+</table>
